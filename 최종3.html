@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가짜뉴스 진짜뉴스 퀴즈</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+  }
+  .header {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    max-width: 300px; /* 이미지 최대 너비 지정 */
+    max-height: 200px; /* 이미지 최대 높이 지정 */
+  }
+  .question {
+    margin-bottom: 20px;
+    font-size: 18px; /* 문제 텍스트 폰트 크기 지정 */
+  }
+  .options {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .option-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    margin: 10px;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  .option-button:hover {
+    background-color: #0056b3;
+  }
+  .submit-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  .submit-button:hover {
+    background-color: #218838;
+  }
+  .result {
+    margin-bottom: 20px;
+  }
+  .progress {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="header">가짜뉴스 진짜뉴스 퀴즈</div>
+<div class="container">
+  <img id="quiz-image" src="" alt="Quiz Image">
+  <div class="question">
+    <!-- 문제 텍스트는 JavaScript에서 동적으로 변경됩니다. -->
+  </div>
+  <div class="progress">문제: 1 / 8</div>
+  <div class="options">
+    <button class="option-button" onclick="selectOption(1)">가짜뉴스</button>
+    <button class="option-button" onclick="selectOption(2)">진짜뉴스</button>
+  </div>
+  <button class="submit-button" onclick="submitAnswer()">제출</button>
+  <div class="result">
+    <!-- 결과는 JavaScript에서 동적으로 변경됩니다. -->
+  </div>
+</div>
+
+<script>
+  // 문제와 정답 배열 정의
+  var questions = [
+    { question: "915년 독일이 영국 배를 침몰시킨 사건이 있었다?", answer: 2, explanation: "정답입니다! 이는 진짜뉴스입니다. 1915년 5월 8일 미국항을 출발한 루시타니아호가 독일 U보트가 쏜 어뢰를 맞고 침몰한 사건은 진짜였다. 이 사고로 1천 2백여명 사망했고 사망자 중 128명이 미국인이었다. 독일은 이 배가 영국 배고 미국제 군수품이 실려있었기에 공격했다고 말하며 적법한 전쟁행위였다고 주장했다. " },
+    { question: "1945년 모스크바 3상회의 때 소련은 신탁통치를, 미국은 조선의 즉시 독립을 주장 했다?", answer: 1, explanation: "정답입니다! 이는 가짜뉴스입니다. 동아일보는 1945년 12월 27일 기사 첫 면에 모스크바 3상회의에서 소련은 신탁통치를, 미국은 조선의 즉시 독립을 주장했다고 보도했으나 이는 반대로 보도한 것으로 실제로 소련은 조선의 즉시 독립을, 미국은 신탁통치를 주장했다. 이 오보로 인하여 조선은 신탁 찬성과 반대의 소용돌이에 휘말리며 좌우가 분열되며 극심한 혼란에 빠진다." },
+    { question: "상해에 3.1중학이라는 이름의 학교가 있었다?", answer: 2, explanation: "정답입니다! 이는 진짜뉴스입니다. 상해에서 우리 유학생을 교양하고 지도하는 기관인 고등교육기관은 1924년 가을에 개학한 뒤 계속 발전해 정식 중학으로 조직을 변경하기로 했다. 상해에 완전한 중학이 설립되면 해외동포들의 자제를 교육시킬 조선에서도 자녀를 경성에 유학시키는 것보다 더 편하겠다고 희망하는 사람도 많이 있었다. 그래서 확정된 바는 이지만 이름을 3.1 중학이라 정했고 기부금도 천여 원이 들어와 오는 가을부터는 개학할 예정이다. " },
+    { question: "조선어를 가르치는 일본인 교사가 있었다?", answer: 2, explanation: "정답입니다! 이는 진짜뉴스입니다. 인천 제2공립보통학교에서 일본 선생이 조선어를 가르치는 일이 있었다. 이로 인해 학생들이 적지 않은 불편을 받았고, 당국자들의 답변으로는 “그는 일본인이지만 조선인이나 발음도 정확하고 조선어 선생이 잠시 없어서 그런 것이지 계속 조선말을 일본 선생이 가르칠 계획은 아니다.” 라고 했지만 새 학기가 되어도 선생이 바뀌지 않지 아이들은 크게 곤란해했고 학부형들도 비난하는 목소리가 점점 높아졌다. " },
+    { question: "'가난 때문에 쫓겨가는 이주민이 있다?", answer: 2, explanation: "정답입니다! 이는 진짜 뉴스입니다. 경북도 내 각 군에서는 근일 춘궁기를 당해 수백명 씩 만주로 이주하고 있는데 부호의 도시 대구에도 세궁민이 1만 7천 5백여 명에 달했다. 당국에서도 그 구제에 부심하고 있으나 그 방도가 탁상공론에 불과하고 실질적으로는 하등이 효과가 없었다. " },
+    { question: "1970년 서울에서 아파트가 무너진 일이 있다?", answer: 2, explanation: "정답입니다! 이는 진짜뉴스입니다. 실제로 완공된 지 5개월 만에 붕괴된 아파트가 있었다. 1970년 서울 와우 시민아파트가 무너져 37명이 사망했다. 5층 15동이 무너져 군장비, 경찰, 예비군 등이 동원되어 36명이 구출되었고 이웃 3동 주민들도 대피하는 큰 사고였다." },
+    { question: "세월호에 타고 있던 학생과 시민 모두 구조했다?", answer: 1, explanation: "정답입니다! 이는 가짜뉴스입니다. 2014년 4월 16일 인천항을 출발해 제주도로 향하던 여객선 세월호가 침몰해 시민과 학생 304명이 사망하는 참사가 발생했다. 연합뉴스가 오전 9시 55분 120명을 구조했다고 보도했고 MBC와 SBS가 10시 6분, KBS는 10시 9분에 방송을 내보냈다. 이어 연합뉴스가 10시 17분에 190명을 구조했다고 보도한 뒤 KBS와 MBC가 10시 21분에 이 내용을 내보내고 SBS도 10시 42분 따라갔다. 명백한 오보였고 이에 대한 책임은 누구도 지지 않았다. 그리고 지금까지 배가 침몰한 원인과 구조가 늦어지게 된 이유 또한 밝혀지지 않고 있다." },
+    { question: "영국 여왕 엘리자베스 2세는 브렉시트를 지지했다?", answer: 1, explanation: "정답입니다! 이는 가짜뉴스입니다. 2017년 영국에서 유럽연합 탈퇴, 즉 브렉시트 국민투표가 시행되었고 과반 지지를 얻어 2020년 영국이 유럽을 탈퇴하게 되었다. 영국의 타블로이드 잡지 ‘The sun’은 엘리자베스 2세 여왕도 브렉시트를 지지한다는 가짜뉴스 등 많은 가짜뉴스를 생산해 영국 국민이 브렉시트 찬성에 투표하게끔 여론을 조작했다. " }
+  ];
+
+  var imagePaths = [
+    "1.png", "2.jpg", "3.png", "4.jpg", "5.jpg", "6.jpg", "7.png", "8.jpg"
+  ];
+
+  var currentQuestion = 0;
+  var userAnswers = [];
+  var resultDiv = document.querySelector('.result');
+  var progressDiv = document.querySelector('.progress');
+  var imageElement = document.getElementById('quiz-image');
+
+  // 문제와 옵션 표시 함수
+  function displayQuestion() {
+    var questionDiv = document.querySelector('.question');
+    questionDiv.textContent = questions[currentQuestion].question;
+    imageElement.src = imagePaths[currentQuestion];
+    progressDiv.textContent = '문제: ' + (currentQuestion + 1) + ' / ' + questions.length;
+  }
+
+  // 옵션 선택 함수
+  function selectOption(option) {
+    userAnswers[currentQuestion] = option;
+    document.querySelectorAll('.option-button').forEach(btn => {
+      btn.style.backgroundColor = '#007bff';
+      btn.style.color = '#fff';
+    });
+    document.querySelector('.option-button:nth-child(' + option + ')').style.backgroundColor = '#28a745';
+    document.querySelector('.option-button:nth-child(' + option + ')').style.color = '#fff';
+  }
+
+  // 답변 제출 함수
+  function submitAnswer() {
+    var explanation = questions[currentQuestion].explanation;
+    if (userAnswers[currentQuestion] === questions[currentQuestion].answer) {
+      // 정답일 경우
+      resultDiv.innerHTML = '<p style="color: #28a745;">' + explanation + '</p>';
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        displayQuestion();
+      } else {
+        // 모든 문제를 맞춘 경우
+        resultDiv.innerHTML += '<p style="color: #28a745;">축하합니다! 모든 문제를 맞추셨습니다!</p>';
+        // 사용자 답변 초기화
+        userAnswers = [];
+        currentQuestion = 0;
+      }
+    } else {
+      // 오답일 경우
+      resultDiv.innerHTML = '<p style="color: #dc3545;">틀렸습니다! 처음부터 다시 시도해보세요.</p>';
+      // 사용자 답변 초기화
+      userAnswers = [];
+      currentQuestion = 0;
+      displayQuestion();
+    }
+  }
+
+  // 초기 페이지 로드 시 첫 번째 문제 표시
+  displayQuestion();
+</script>
+</body>
+</html>
